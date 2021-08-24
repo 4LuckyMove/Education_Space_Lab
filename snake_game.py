@@ -44,12 +44,14 @@ class Game:
                         print(f'\nGAME OVER\nScore: {Game.score}')
                         Game.game_thread = False
                         exit()
+                        # Menu().call_menu()
 
                 if not (Game.x in range(width-39)) and not (Game.y in range(height-1)) or \
                     not (Game.x in range(width-1)) and not (Game.y in range(height-19)):
                     print(f'\nGAME OVER\nScore: {Game.score}')
                     Game.game_thread = False
                     exit()
+                    # Menu().call_menu()
 
                 if w == 0:
                     print('#', end='')
@@ -74,7 +76,7 @@ class Game:
             print()
 
         # print(f"X player: {pos_player_x} || Y player: {pos_player_y}")
-        # print(f"Score: {Game.score}\n\nWASD / Стрелочки - перемещение\nESC - выйти")
+        print(f"\nScore: {Game.score}\n\nWASD / Стрелочки - перемещение\nESC - выйти")
         lastX = pos_player_x
         lastY = pos_player_y
         if Game.score > 0:
@@ -108,9 +110,9 @@ class Game:
                 Game.icon_player = "►"
 
             elif Game.button_default in ["exit", 27]:
-                print("Вы покинули игру")
                 Game.game_thread = False
                 exit()
+                # Menu().call_menu()
 
             Game().board(pos_player_x=Game.x, pos_player_y=Game.y)
 
@@ -140,11 +142,27 @@ class Menu:
         Menu.selected += 1
         Menu().show_menu()
 
+    def instruction(self):
+        print('Управление:\nWASD / Стрелочки - перемещение\nESC - выйти')
+
     def call_menu(self):
         Menu().show_menu()
         keyboard.add_hotkey('up', Menu().up_menu)
         keyboard.add_hotkey('down', Menu().down_menu)
-        keyboard.wait()
+        # if Menu().show_menu()[0] == 'Продолжить игру':
+        #     pass
+        # elif Menu().show_menu()[1] == 'Новая игра':
+        #     GameFunction().console_clear()
+        #     GameFunction().main()
+        # elif Menu().show_menu()[2] == 'Рекорд':
+        #     pass
+        # elif Menu().show_menu()[3] == 'Инструкция':
+        #     Menu().instruction()
+        # elif Menu().show_menu()[4] == 'Выход':
+        #     print("Вы покинули игру")
+        #     exit()
+
+        keyboard.wait('enter')
 
 
 class GameFunction:
@@ -162,4 +180,5 @@ class GameFunction:
 
 if __name__ == '__main__':
     GameFunction().console_clear()
+    # Menu().call_menu()
     GameFunction().main()
