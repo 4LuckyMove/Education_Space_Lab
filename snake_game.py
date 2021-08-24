@@ -1,11 +1,13 @@
 import os
 import time
 import random
+import keyboard
 from threading import Thread
 
 
 if os.getenv("OS") in ["Windows_NT", "Linux"]:
     import msvcrt as m
+
 
 last2X = 0
 last2Y = 0
@@ -25,8 +27,7 @@ class Game:
     button_default = "d"
     score = 0
     icon_player = "►"
-    tail = "o"
-
+    tail = "*"
 
     def board(self, width: int = 40, height: int = 20, pos_player_x: int = x, pos_player_y: int = y):
         global elemX, elemY, last2X, last2Y, lastX, lastY
@@ -72,8 +73,8 @@ class Game:
                         print(' ', end='')
             print()
 
-        print(f"X player: {pos_player_x} || Y player: {pos_player_y}")
-        print(f"Score: {Game.score}\n\nWASD / Стрелочки - перемещение\nESC - выйти")
+        # print(f"X player: {pos_player_x} || Y player: {pos_player_y}")
+        # print(f"Score: {Game.score}\n\nWASD / Стрелочки - перемещение\nESC - выйти")
         lastX = pos_player_x
         lastY = pos_player_y
         if Game.score > 0:
@@ -116,6 +117,36 @@ class Game:
             time.sleep(0.2)
 
 
+class Menu:
+
+    selected = 0
+    main_menu = ["Продолжить игру", "Новая игра", "Рекорд", "Инструкция", "Выход"]
+
+    def show_menu(self):
+        GameFunction().console_clear()
+        print('\n\tГлавное меню:')
+        for i in range(len(Menu.main_menu)):
+            print(f'{"►" if Menu.selected == i else " "} {i+1}. {Menu.main_menu[i]}')
+
+    def up_menu(self):
+        if Menu.selected == 0:
+            return
+        Menu.selected -= 1
+        Menu().show_menu()
+
+    def down_menu(self):
+        if Menu.selected == len(Menu.main_menu):
+            return
+        Menu.selected += 1
+        Menu().show_menu()
+
+    def call_menu(self):
+        Menu().show_menu()
+        keyboard.add_hotkey('up', Menu().up_menu)
+        keyboard.add_hotkey('down', Menu().down_menu)
+        keyboard.wait()
+
+
 class GameFunction:
 
     def console_clear(self):
@@ -127,9 +158,6 @@ class GameFunction:
         Game().board()
         Thread(target=Game().move).start()
         Thread(target=Game().btn_move).start()
-
-    def menu(self):
-        pass
 
 
 if __name__ == '__main__':
