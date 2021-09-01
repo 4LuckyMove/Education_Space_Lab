@@ -9,6 +9,79 @@ if os.getenv("OS") in ["Windows_NT", "Linux"]:
     import msvcrt as m
 
 
+class BcolorMenu:
+
+    OKBLUE = '\033[94m'
+    WARNING = '\033[93m'
+
+
+def start_function():
+    # print('Start works')
+    os.system('cls' if os.name == 'nt' else 'clear')
+    Game().board()
+    Thread(target=Game().move).start()
+    Thread(target=Game().btn_move).start()
+
+
+def save_function():
+    print('Save works')
+
+
+def option_function():
+    print('Option works')
+
+
+class Menu:
+
+    def __init__(self):
+        self.exit = 0
+        self.menu = []
+        self.functions = []
+        self.controller = []
+
+    def add_menu(self, menu, function):
+        self.menu.append(menu)
+        self.functions.append(function)
+        if len(self.controller) == 0:
+            self.controller.append(1)
+        else:
+            self.controller.append(0)
+
+    def start_menu(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        for menu_item in range(len(self.menu)):
+            if self.controller[menu_item] == 1:
+                print(BcolorMenu.WARNING + self.menu[menu_item])
+            else:
+                print(BcolorMenu.OKBLUE + self.menu[menu_item])
+        # main_menu.start_menu()
+        self.add_menu('Новая игра', start_function)
+        self.add_menu('Save', save_function)
+        self.add_menu('Option', option_function)
+        self.add_menu('Exit', 'exit')
+
+    def handle_menu(self, event):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        if event.name == 'down':
+            if self.controller.index(1) != (len(self.controller) - 1):
+                self.controller.insert(0, 0)
+                self.controller.pop()
+        elif event.name == 'up':
+            if self.controller.index(1) != 0:
+                self.controller.append(0)
+                self.controller.pop(0)
+        for menu_item in range(len(self.menu)):
+            if self.controller[menu_item] == 1:
+                print(BcolorMenu.WARNING + self.menu[menu_item])
+            else:
+                print(BcolorMenu.OKBLUE + self.menu[menu_item])
+        if event.name == 'enter':
+            if self.functions[self.controller.index(1)] == 'exit':
+                self.exit = 1
+                return
+            self.functions[self.controller.index(1)]()
+
+
 last2X = 0
 last2Y = 0
 lastX = 0
@@ -31,7 +104,7 @@ class Game:
 
     def board(self, width: int = 40, height: int = 20, pos_player_x: int = x, pos_player_y: int = y):
         global elemX, elemY, last2X, last2Y, lastX, lastY
-        GameFunction().console_clear()
+        os.system('cls' if os.name == 'nt' else 'clear')
         for h in range(height):
             for w in range(width):
                 if pos_player_x == Game.fruit_cord_x and pos_player_y == Game.fruit_cord_y:
@@ -44,14 +117,12 @@ class Game:
                         print(f'\nGAME OVER\nScore: {Game.score}')
                         Game.game_thread = False
                         exit()
-                        # Menu().call_menu()
 
                 if not (Game.x in range(width-39)) and not (Game.y in range(height-1)) or \
                     not (Game.x in range(width-1)) and not (Game.y in range(height-19)):
                     print(f'\nGAME OVER\nScore: {Game.score}')
                     Game.game_thread = False
                     exit()
-                    # Menu().call_menu()
 
                 if w == 0:
                     print('#', end='')
@@ -112,73 +183,27 @@ class Game:
             elif Game.button_default in ["exit", 27]:
                 Game.game_thread = False
                 exit()
-                # Menu().call_menu()
 
             Game().board(pos_player_x=Game.x, pos_player_y=Game.y)
 
             time.sleep(0.2)
 
 
-class Menu:
-
-    selected = 0
-    main_menu = ["Продолжить игру", "Новая игра", "Рекорд", "Инструкция", "Выход"]
-
-    def show_menu(self):
-        GameFunction().console_clear()
-        print('\n\tГлавное меню:')
-        for i in range(len(Menu.main_menu)):
-            print(f'{"►" if Menu.selected == i else " "} {i+1}. {Menu.main_menu[i]}')
-
-    def up_menu(self):
-        if Menu.selected == 0:
-            return
-        Menu.selected -= 1
-        Menu().show_menu()
-
-    def down_menu(self):
-        if Menu.selected == len(Menu.main_menu):
-            return
-        Menu.selected += 1
-        Menu().show_menu()
-
-    def instruction(self):
-        print('Управление:\nWASD / Стрелочки - перемещение\nESC - выйти')
-
-    def call_menu(self):
-        Menu().show_menu()
-        keyboard.add_hotkey('up', Menu().up_menu)
-        keyboard.add_hotkey('down', Menu().down_menu)
-        # if Menu().show_menu()[0] == 'Продолжить игру':
-        #     pass
-        # elif Menu().show_menu()[1] == 'Новая игра':
-        #     GameFunction().console_clear()
-        #     GameFunction().main()
-        # elif Menu().show_menu()[2] == 'Рекорд':
-        #     pass
-        # elif Menu().show_menu()[3] == 'Инструкция':
-        #     Menu().instruction()
-        # elif Menu().show_menu()[4] == 'Выход':
-        #     print("Вы покинули игру")
-        #     exit()
-
-        keyboard.wait('enter')
+main_menu = Menu()
+main_menu.start_menu()
+keyboard.on_press(main_menu.handle_menu)
+while main_menu.exit != 1:
+    pass
 
 
-class GameFunction:
 
-    def console_clear(self):
-        for i in ["cls", "clear"]:
-            os.system(i)
-            break
-
-    def main(self):
-        Game().board()
-        Thread(target=Game().move).start()
-        Thread(target=Game().btn_move).start()
+# Menu().add_menu('Start', start_function)
+# self.add_menu('Save', save_function)
+# self.add_menu('Option', option_function)
+# self.add_menu('Exit', 'exit')
+# main_menu.start_menu()
+# keyboard.on_press(self.handle_menu)
+# while self.exit != 1:
+#     pass
 
 
-if __name__ == '__main__':
-    GameFunction().console_clear()
-    # Menu().call_menu()
-    GameFunction().main()
