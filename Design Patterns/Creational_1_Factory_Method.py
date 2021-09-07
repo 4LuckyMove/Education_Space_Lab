@@ -47,15 +47,15 @@ class Circle(Figure):
 
 class FigureFactory:
     def create_figure(self, name):
-        if name == 'круг':
+        if name == "круг":
             radius = input("Введите радиус круга: ")
             return Circle(float(radius))
-        elif name == 'прямоугольник':
+        elif name == "прямоугольник":
             height = input("Введите высоту прямоугольника: ")
             width = input("Введите ширину прямоугольника: ")
             return Rectangle(int(height), int(width))
-        elif name == 'квадрат':
-            width = input("Введите ширину квадрата: ")
+        elif name == "квадрат":
+            width = input("Введите длину квадрата: ")
             return Square(int(width))
 
 
