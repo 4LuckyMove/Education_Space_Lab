@@ -45,7 +45,12 @@ class Circle(Figure):
         return 2 * 3.14 * self.radius
 
 
-class FigureFactory:
+class Factory:
+    def create_figure(self, name):
+        pass
+
+
+class FigureFactory(Factory):
     def create_figure(self, name):
         if name == "круг":
             radius = input("Введите радиус круга: ")
