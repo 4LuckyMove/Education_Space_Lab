@@ -45,7 +45,8 @@ class Circle(Figure):
         return 2 * 3.14 * self.radius
 
 
-class Factory:
+class Factory(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
     def create_figure(self, name):
         pass
 
