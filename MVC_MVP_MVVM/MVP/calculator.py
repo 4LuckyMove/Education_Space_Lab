@@ -19,10 +19,10 @@ class Calculator(QtWidgets.QMainWindow):
 
 def qapp():
     if QtWidgets.QApplication.instance():
-        _app = QtWidgets.QApplication.instance()
+        calc_app = QtWidgets.QApplication.instance()
     else:
-        _app = QtWidgets.QApplication(sys.argv)
-    return _app
+        calc_app = QtWidgets.QApplication(sys.argv)
+    return calc_app
 
 
 if __name__ == '__main__':
