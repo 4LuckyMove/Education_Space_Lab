@@ -20,7 +20,6 @@ class Prototype(ABC):
 class Archer(Prototype):
     def __init__(self, level, vitality, defense, attack):
         super().__init__()
-        time.sleep(2)
         self.level = level
         self.vitality = vitality
         self.defense = defense
@@ -34,7 +33,6 @@ class Archer(Prototype):
 class Warrior(Prototype):
     def __init__(self, level, vitality, defense, attack):
         super().__init__()
-        time.sleep(2)
         self.level = level
         self.vitality = vitality
         self.defense = defense
@@ -48,7 +46,6 @@ class Warrior(Prototype):
 class Mage(Prototype):
     def __init__(self, level, vitality, defense, attack):
         super().__init__()
-        time.sleep(2)
         self.level = level
         self.vitality = vitality
         self.defense = defense
